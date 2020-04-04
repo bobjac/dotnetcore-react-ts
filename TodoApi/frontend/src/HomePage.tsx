@@ -3,7 +3,7 @@ import React from 'react';
 import { css, jsx } from '@emotion/core';
 import { PrimaryButton } from './Styles';
 import { QuestionList } from './QuestionList';
-import { getUnansweredQuestions } from './QuestionsData';
+import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { Page } from './Page'
 import { PageTitle } from './PageTitle'
 
@@ -43,3 +43,6 @@ export const HomePage = () => (
     </div>
     </Page>
 );
+
+const renderQuestion = (question: QuestionData) =>
+    <div>{question.title}</div>;
