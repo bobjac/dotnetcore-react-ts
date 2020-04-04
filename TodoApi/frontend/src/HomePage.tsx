@@ -4,10 +4,12 @@ import { css, jsx } from '@emotion/core';
 import { PrimaryButton } from './Styles';
 import { QuestionList } from './QuestionList';
 import { getUnansweredQuestions } from './QuestionsData';
-
+import { Page } from './Page'
+import { PageTitle } from './PageTitle'
 
 
 export const HomePage = () => (
+    <Page>
     <div
     css={css`
       margin: 50px auto 20px auto;
@@ -34,9 +36,10 @@ export const HomePage = () => (
             >
             Unanswered Questions
             </h2>
-
+            <PageTitle>Unanswered Questions</PageTitle>
             <PrimaryButton>Ask a question</PrimaryButton>
         </div>
         <QuestionList data={getUnansweredQuestions()} />
     </div>
+    </Page>
 );

@@ -9,9 +9,10 @@ import React from 'react';
 
 interface Props {
     data: QuestionData[];
+    renderItem?: (item: QuestionData) => JSX.Element;
 } 
 
-export const QuestionList: FC<Props> = ({ data }) => (
+export const QuestionList: FC<Props> = ({ data, renderItem }) => (
     <ul 
       css={css `
       list-style: none;
@@ -34,7 +35,7 @@ export const QuestionList: FC<Props> = ({ data }) => (
             }
         `}
         >
-            <Question data={question} />
+            {renderItem ? renderItem(question) : <Question data={question} />}
         </li>
     ))}
     </ul>
