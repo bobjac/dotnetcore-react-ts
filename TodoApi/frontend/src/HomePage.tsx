@@ -6,9 +6,20 @@ import { QuestionList } from './QuestionList';
 import { getUnansweredQuestions, QuestionData } from './QuestionsData';
 import { Page } from './Page'
 import { PageTitle } from './PageTitle'
+import { useEffect, useState } from 'react';
 
 
-export const HomePage = () => (
+export const HomePage = () => {
+    const [questions, setQuestions] = useState<QuestionData[] | null>(null);
+    const [questionsLoading, setQuestionsLoading] = useState(true);
+    useEffect(() => {
+        const doGetUnansweredQuestions = async() => {
+            const unansweredQuestions = await getUnansweredQuestions();
+            setQuestions(unansweredQuestions);
+        };
+        doGetUnansweredQuestions();
+    }, []);
+    return (
     <Page>
     <div
     css={css`
@@ -39,10 +50,11 @@ export const HomePage = () => (
             <PageTitle>Unanswered Questions</PageTitle>
             <PrimaryButton>Ask a question</PrimaryButton>
         </div>
-        <QuestionList data={getUnansweredQuestions()} />
+{/* <QuestionList data={getUnansweredQuestions()} /> */}
     </div>
     </Page>
-);
+    );
+};
 
 const renderQuestion = (question: QuestionData) =>
     <div>{question.title}</div>;
