@@ -16,6 +16,7 @@ export const HomePage = () => {
         const doGetUnansweredQuestions = async() => {
             const unansweredQuestions = await getUnansweredQuestions();
             setQuestions(unansweredQuestions);
+            setQuestionsLoading(false);
         };
         doGetUnansweredQuestions();
     }, []);
@@ -50,7 +51,18 @@ export const HomePage = () => {
             <PageTitle>Unanswered Questions</PageTitle>
             <PrimaryButton>Ask a question</PrimaryButton>
         </div>
-{/* <QuestionList data={getUnansweredQuestions()} /> */}
+        {questionsLoading ? (
+           <div
+              css={css`
+                 font-size: 16px;
+                 font-style: italic;
+              `}
+            > 
+              Loading...
+            </div>
+        ) : (
+        <QuestionList data={questions || []} /> 
+        )}
     </div>
     </Page>
     );
