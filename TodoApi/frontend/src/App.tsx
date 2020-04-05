@@ -22,7 +22,7 @@ function App() {
           `}
       >
         <Header />
-        <Route path="/" component={HomePage} /> 
+        <Route exact path="/" component={HomePage} /> 
         <Route path="/search" component={SearchPage} />
         <Route path="/ask" component={AskPage} />
         <Route path="/signin" component={SignInPage} />
