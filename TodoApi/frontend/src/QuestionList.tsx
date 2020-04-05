@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { gray5, accent2 } from './Styles';
@@ -12,8 +12,7 @@ interface Props {
     renderItem?: (item: QuestionData) => JSX.Element;
 } 
 
-export const QuestionList: FC<Props> = memo(({ data, renderItem }) => {
-    console.log('Rendering QuestionList', data, renderItem);
+export const QuestionList: FC<Props> = ({ data, renderItem }) => {
     return(
     <ul 
       css={css `
@@ -42,4 +41,4 @@ export const QuestionList: FC<Props> = memo(({ data, renderItem }) => {
     ))}
     </ul>
     );
-});
+};
