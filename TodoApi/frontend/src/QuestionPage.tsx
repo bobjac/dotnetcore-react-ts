@@ -5,6 +5,7 @@ import { QuestionData, getQuestion } from './QuestionsData';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { gray3, gray6 } from './Styles';
+import { AnswerList } from './AnswerList';
 
 
 interface RouteParams {
@@ -66,6 +67,7 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
                                 ${question.created.toLocaleDateString()} 
                                 ${question.created.toLocaleTimeString()}`}
                             </div>
+                            <AnswerList data={question.answers} />
                     </Fragment>
                     )}
             </div>
