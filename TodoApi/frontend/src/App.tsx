@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import logo from './logo.svg';
-import { Header } from './Header';
+import { HeaderWithRouter as Header } from './Header';
 import { HomePage } from './HomePage';
 import { SearchPage } from './SearchPage';
 import { SignInPage } from './SignInPage';
