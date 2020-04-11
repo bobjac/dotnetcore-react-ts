@@ -13,7 +13,7 @@ export const Header: FC<RouteComponentProps> = ({history, location}) => {
     const [search, setSearch] = useState(criteria);
 
     const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
+        setSearch(e.currentTarget.value);
     };
     return(
         <div 
@@ -44,29 +44,29 @@ export const Header: FC<RouteComponentProps> = ({history, location}) => {
                 Q & A
             </Link>
 
-    
-            <input
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearchInputChange}
-                css={css`
-                    box-sizing: border-box;
-                    font-family: ${fontFamily};
-                    font-size: ${fontSize};
-                    padding: 8px 10px;
-                    border: 1px solid ${gray5};
-                    border-radius: 3px;
-                    color: ${gray2};
-                    background-color: white;
-                    width: 200px;
-                    height: 30px;
-                    :focus {
-                    outline-color: ${gray5};
-                    }
-                `}
-            />
-
+            <form>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={handleSearchInputChange}
+                    css={css`
+                        box-sizing: border-box;
+                        font-family: ${fontFamily};
+                        font-size: ${fontSize};
+                        padding: 8px 10px;
+                        border: 1px solid ${gray5};
+                        border-radius: 3px;
+                        color: ${gray2};
+                        background-color: white;
+                        width: 200px;
+                        height: 30px;
+                        :focus {
+                        outline-color: ${gray5};
+                        }
+                    `}
+                />
+            </form>
 
 
             <Link
