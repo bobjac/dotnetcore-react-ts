@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, createContext } from 'react';
 import { PrimaryButton, gray5, gray6 } from './Styles';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
@@ -6,6 +6,14 @@ import { css, jsx } from '@emotion/core';
 export interface Values {
     [key: string]: any;
 }
+
+interface FormContextProps {
+    values: Values;
+    setValue?: (fieldName: string, value: any) => void;
+}
+export const FormContext = createContext<FormContextProps>({
+    values: {},
+});
 
 interface Props {
     submitCaption?: string;
