@@ -22,6 +22,14 @@ interface Props {
 export const Form: FC<Props> = ({ submitCaption, children}) => {
     const [values, setValues] = useState<Values>({});
     return (
+        <FormContext.Provider
+            value={{
+                values,
+                setValue: (fieldName: string, value: any) => {
+                    setValues({...values, [fieldName]: value});
+                },
+            }}
+        >
         <form noValidate={true}>
             <fieldset
                 css={css`
@@ -48,5 +56,6 @@ export const Form: FC<Props> = ({ submitCaption, children}) => {
                 </div>
                 </fieldset>
         </form>
+        </FormContext.Provider>
     );
 };

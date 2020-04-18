@@ -6,7 +6,10 @@ import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
 import React, { ChangeEvent, FC, useState } from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-export const Header: FC<RouteComponentProps> = ({history, location}) => {
+export const Header: FC<RouteComponentProps> = ({
+    history, 
+    location
+}) => {
     const searchParams = new URLSearchParams(location.search);
     const criteria = searchParams.get('criteria') || '';
 
