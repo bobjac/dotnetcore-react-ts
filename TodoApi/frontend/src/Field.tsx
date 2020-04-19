@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import React, { FC, useContext, ChangeEvent } from 'react';
+import { FormContext } from './Form';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import {
@@ -38,7 +39,19 @@ const baseCSS = css`
       name,
       label,
       type = 'Text',
-    }) => (
+    }) => {
+        const { setValue } = useContext(FormContext);
+        const handleChange = (
+            e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+        ) => {
+            if (setValue) {
+                setValue(name, e.currentTarget.value);
+            }
+        };
+        return (
+        <FormContext.Consumer>
+            {({values}) => (
+        
         <div
             css={css`
             display: flex;
@@ -57,11 +70,22 @@ const baseCSS = css`
             </label>
             )}
             {(type === 'Text' || type === 'Password') && (
-                <input type={type.toLowerCase()} id={name} css={baseCSS} />
+                <input 
+                type={type.toLowerCase()} 
+                id={name} 
+                value={values[name] === undefined ? '' : values[name]}
+                onChange={handleChange}
+                css={baseCSS} />
             )}
             {type === 'TextArea' && (
                 <textarea
                 id={name}
+                value= {
+                    values[name] === undefined
+                      ? ''
+                      : values[name]
+                }
+                onChange={handleChange}
                 css={css`
                     ${baseCSS};
                     height: 100px;
@@ -69,4 +93,7 @@ const baseCSS = css`
                 />
             )}
         </div>
-       );
+        )}
+        </FormContext.Consumer>
+        );
+        };
