@@ -7,12 +7,26 @@ export interface Values {
     [key: string]: any;
 }
 
+export interface Errors {
+    [key: string]: string[];
+}
+
+export interface Touched {
+    [key: string]: boolean;
+}
+
 interface FormContextProps {
     values: Values;
     setValue?: (fieldName: string, value: any) => void;
+    errors: Errors;
+    validate?: (fieldName: string) => void;
+    touched: Touched;
+    setTouched?: (fieldName: string) => void;
 }
 export const FormContext = createContext<FormContextProps>({
     values: {},
+    errors: {},
+    touched: {}
 });
 
 type Validator = (value: any, args?: any) => string;
@@ -48,6 +62,33 @@ export const Form: FC<Props> = ({
     validationRules
 }) => {
     const [values, setValues] = useState<Values>({});
+    const [errors, setErrors] = useState<Errors>({});
+    const [touched, setTouched] = useState<Touched>({});
+
+    const validate = (fieldName: string): string[] => {
+        if (!validationRules) {
+            return [];
+        }
+        if (!validationRules[fieldName]) {
+            return [];
+        }
+
+        const rules = Array.isArray(validationRules[fieldName]) ? 
+            (validationRules[fieldName] as Validation[]) : 
+            ([validationRules[fieldName]] as Validation[]);
+        
+        const fieldErrors: string[] = [];
+        rules.forEach(rule => {
+            const error = rule.validator(values[fieldName], rule.arg);
+            if (error) {
+                fieldErrors.push(error);
+            }
+        });
+        const newErrors = { ...errors, [fieldName]: fieldErrors};
+        setErrors(newErrors);
+        return fieldErrors;
+    };
+
     return (
         <FormContext.Provider
             value={{
@@ -55,6 +96,12 @@ export const Form: FC<Props> = ({
                 setValue: (fieldName: string, value: any) => {
                     setValues({...values, [fieldName]: value});
                 },
+                errors,
+                validate,
+                touched,
+                setTouched: (fieldName: string) => {
+                    setTouched({...touched, [fieldName]: true});
+                }
             }}
         >
         <form noValidate={true}>

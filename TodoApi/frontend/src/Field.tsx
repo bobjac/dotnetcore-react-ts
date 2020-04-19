@@ -40,14 +40,29 @@ const baseCSS = css`
       label,
       type = 'Text',
     }) => {
-        const { setValue } = useContext(FormContext);
+        const { setValue, touched, setTouched, validate } = useContext(FormContext);
         const handleChange = (
             e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
             if (setValue) {
                 setValue(name, e.currentTarget.value);
             }
+            if (touched[name]) {
+                if (validate) {
+                    validate(name);
+                }
+            }
         };
+
+        const handleBlur = () => {
+            if (setTouched) {
+                setTouched(name);
+            }
+            if (validate) {
+                validate(name);
+            }
+        };
+
         return (
         <FormContext.Consumer>
             {({values}) => (
@@ -75,6 +90,7 @@ const baseCSS = css`
                 id={name} 
                 value={values[name] === undefined ? '' : values[name]}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 css={baseCSS} />
             )}
             {type === 'TextArea' && (
@@ -86,6 +102,7 @@ const baseCSS = css`
                       : values[name]
                 }
                 onChange={handleChange}
+                onBlur={handleBlur}
                 css={css`
                     ${baseCSS};
                     height: 100px;
