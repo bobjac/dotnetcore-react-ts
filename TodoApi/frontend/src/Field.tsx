@@ -65,7 +65,7 @@ const baseCSS = css`
 
         return (
         <FormContext.Consumer>
-            {({values}) => (
+            {({values, errors}) => (
         
         <div
             css={css`
@@ -109,6 +109,19 @@ const baseCSS = css`
                 `}
                 />
             )}
+            {errors[name] &&
+                errors[name].length > 0 && 
+                errors[name].map(error => (
+                    <div
+                        key={error}
+                        css={css`
+                            font-size: 12px;
+                            color: red;
+                        `}
+                    >
+                        {error}
+                    </div>
+                ))}
         </div>
         )}
         </FormContext.Consumer>
