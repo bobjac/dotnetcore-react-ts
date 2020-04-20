@@ -1,4 +1,4 @@
-import { Action, ActionCreator, Dispatch } from 'redux';
+import { Action, ActionCreator, Dispatch, Reducer, combineReducers } from 'redux';
 import { QuestionData, getUnansweredQuestions, postQuestion, PostQuestionData } from './QuestionsData';
 import { ThunkAction } from 'redux-thunk';
 
@@ -77,3 +77,9 @@ export const clearPostedQuestionActionCreator:
     return postedQuestionAction;
 };
 
+const questionsReducer: Reducer<QuestionState, QuestionActions> = (
+    state = initialQuestionState,
+    action
+) => {
+    return state;
+};
