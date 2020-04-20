@@ -1,5 +1,6 @@
 import { Action, ActionCreator, Dispatch } from 'redux';
 import { QuestionData, getUnansweredQuestions } from './QuestionsData';
+import { ThunkAction } from 'redux-thunk';
 
 interface QuestionState {
     readonly loading: boolean;
@@ -36,7 +37,8 @@ type QuestionActions =
     | GotUnansweredQuestionsAction
     | PostedQuestionAction;
 
-export const getUnansweredQuestionsActionCreator = () => {
+export const getUnansweredQuestionsActionCreator: 
+    ActionCreator<ThunkAction<Promise<void>, QuestionData[], null, GotUnansweredQuestionsAction>> = () => {
     return async (dispatch: Dispatch) => {
         const gettingUnansweredQuestionsAction: GettingUnansweredQuestionsAction = {
             type: 'GettingUnansweredQuestions'
