@@ -1,5 +1,5 @@
 import { Action, ActionCreator, Dispatch } from 'redux';
-import { QuestionData } from './QuestionsData';
+import { QuestionData, getUnansweredQuestions } from './QuestionsData';
 
 interface QuestionState {
     readonly loading: boolean;
@@ -42,7 +42,12 @@ export const getUnansweredQuestionsActionCreator = () => {
             type: 'GettingUnansweredQuestions'
         };
         dispatch(gettingUnansweredQuestionsAction);
-        // TODO - get the questions from server
+        const questions = await getUnansweredQuestions();
+        const gotUnansweredQuestionAction: GotUnansweredQuestionsAction = {
+            questions,
+            type: 'GotUnansweredQuestions'
+        };
+        dispatch(gotUnansweredQuestionAction);
         // TODO - dispatch
 
     };
