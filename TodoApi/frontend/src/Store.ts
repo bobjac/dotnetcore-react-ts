@@ -1,4 +1,4 @@
-import { Action } from 'redux';
+import { Action, ActionCreator, Dispatch } from 'redux';
 import { QuestionData } from './QuestionsData';
 
 interface QuestionState {
@@ -36,3 +36,11 @@ type QuestionActions =
     | GotUnansweredQuestionsAction
     | PostedQuestionAction;
 
+export const getUnansweredQuestionsActionCreator = () => {
+    return async (dispatch: Dispatch) => {
+        // TODO - dispatch the GettingUnansweredQuestions action 
+        // TODO - get the questions from server
+        // TODO - dispatch
+
+    };
+}
