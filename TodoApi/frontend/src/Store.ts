@@ -68,5 +68,12 @@ export const PostedQuestionActionCreator:
     };
 };
 
-
+export const clearPostedQuestionActionCreator: 
+    ActionCreator<PostedQuestionAction> = () => {
+    const postedQuestionAction: PostedQuestionAction = {
+        type: 'PostedQuestion',
+        result: undefined,
+    };
+    return postedQuestionAction;
+};
 
