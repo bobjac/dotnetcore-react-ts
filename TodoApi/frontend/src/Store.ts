@@ -1,5 +1,5 @@
 import { Action, ActionCreator, Dispatch } from 'redux';
-import { QuestionData, getUnansweredQuestions } from './QuestionsData';
+import { QuestionData, getUnansweredQuestions, postQuestion, PostQuestionData } from './QuestionsData';
 import { ThunkAction } from 'redux-thunk';
 
 interface QuestionState {
@@ -54,3 +54,19 @@ export const getUnansweredQuestionsActionCreator:
 
     };
 }
+
+export const PostedQuestionActionCreator: 
+    ActionCreator<ThunkAction<Promise<void>, QuestionData, PostQuestionData, PostedQuestionAction>> = 
+    (question: PostQuestionData) => {
+    return async (dispatch: Dispatch) => {
+        const result = await postQuestion(question);
+        const postedQuestionAction: PostedQuestionAction = {
+            type: 'PostedQuestion',
+            result
+        };
+        dispatch(postedQuestionAction);
+    };
+};
+
+
+
