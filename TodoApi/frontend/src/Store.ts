@@ -38,7 +38,10 @@ type QuestionActions =
 
 export const getUnansweredQuestionsActionCreator = () => {
     return async (dispatch: Dispatch) => {
-        // TODO - dispatch the GettingUnansweredQuestions action 
+        const gettingUnansweredQuestionsAction: GettingUnansweredQuestionsAction = {
+            type: 'GettingUnansweredQuestions'
+        };
+        dispatch(gettingUnansweredQuestionsAction);
         // TODO - get the questions from server
         // TODO - dispatch
 
