@@ -1,6 +1,15 @@
-import { Action, ActionCreator, Dispatch, Reducer, combineReducers } from 'redux';
+import { 
+    Action, 
+    ActionCreator, 
+    Dispatch, 
+    Reducer, 
+    combineReducers,
+    Store,
+    createStore,
+    applyMiddleware
+} from 'redux';
 import { QuestionData, getUnansweredQuestions, postQuestion, PostQuestionData } from './QuestionsData';
-import { ThunkAction } from 'redux-thunk';
+import thunk, { ThunkAction } from 'redux-thunk';
 
 interface QuestionState {
     readonly loading: boolean;
@@ -115,3 +124,12 @@ const neverReached = (never: never) => {};
 const rootReducer = combineReducers<AppState>({
     questions: questionsReducer
 });
+
+export function configureStore(): Store<AppState> {
+    const store = createStore(
+        rootReducer,
+        undefined,
+        applyMiddleware(thunk)
+    );
+    return store;
+}
