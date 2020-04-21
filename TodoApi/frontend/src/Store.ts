@@ -111,3 +111,7 @@ const questionsReducer: Reducer<QuestionState, QuestionActions> = (
 };
 
 const neverReached = (never: never) => {};
+
+const rootReducer = combineReducers<AppState>({
+    questions: questionsReducer
+});
