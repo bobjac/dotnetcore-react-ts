@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import { Page } from './Page';
-import { Form, required, minLength, Values } from './Form';
-import { postQuestion } from './QuestionsData';
+import { Form, required, minLength, Values, SubmitResult } from './Form';
+import { PostQuestionData, QuestionData, postQuestion } from './QuestionsData';
 import { Field } from './Field';
 
 export const AskPage = () => {
