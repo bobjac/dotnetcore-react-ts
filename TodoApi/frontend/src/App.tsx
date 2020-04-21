@@ -4,7 +4,7 @@ import { configureStore } from './Store';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import logo from './logo.svg';
 import { HeaderWithRouter as Header } from './Header';
-import { HomePage } from './HomePage';
+import HomePage from './HomePage';
 import { SearchPage } from './SearchPage';
 import { SignInPage } from './SignInPage';
 import { NotFoundPage } from './NotFoundPage';
