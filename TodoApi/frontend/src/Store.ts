@@ -28,7 +28,6 @@ const initialQuestionState: QuestionState = {
 
 export interface GettingUnansweredQuestionsAction 
     extends Action<'GettingUnansweredQuestions'> {
-
 }
 
 export interface GotUnansweredQuestionsAction
@@ -64,7 +63,7 @@ export const getUnansweredQuestionsActionCreator:
     };
 }
 
-export const PostedQuestionActionCreator: 
+export const postQuestionActionCreator: 
     ActionCreator<ThunkAction<Promise<void>, QuestionData, PostQuestionData, PostedQuestionAction>> = 
     (question: PostQuestionData) => {
     return async (dispatch: Dispatch) => {
