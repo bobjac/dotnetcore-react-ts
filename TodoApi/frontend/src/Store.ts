@@ -97,7 +97,7 @@ const questionsReducer: Reducer<QuestionState, QuestionActions> = (
                 loading: true
             };
         }
-        case 'GotUnansweredQuestions' {
+        case 'GotUnansweredQuestions': {
             return {
                 ...state,
                 unanswered: action.questions,
