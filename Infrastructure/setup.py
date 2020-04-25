@@ -2,7 +2,11 @@ import sys
 import qadb
 
 def main(container_name, sa_password):
+    # create the container
     container = qadb.create_sql_container(container_name, sa_password)
+
+    # create the tables in the database
+    tables = qadb.create_sql_tables()
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
