@@ -4,7 +4,6 @@ import qadb
 def main(container_name, sa_password):
     # create the container
     return_code = qadb.create_sql_container(container_name, sa_password)
-    #return_code = 0
     print("The return code from creating the container is " + str(return_code))
 
     if return_code == 0:
