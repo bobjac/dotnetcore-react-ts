@@ -33,6 +33,10 @@ def create_sql_tables(sa_password):
     file_path = os.getcwd() + "/Sql/create_tables.sql"
     execute_sql_script(file_path, sa_password)
 
+def create_sql_procs(sa_password):
+    file_path = os.getcwd() + "/Sql/create_procs.sql"
+    execute_sql_script(file_path, sa_password)
+
 def execute_sql_script(script_path, sa_password):
     cnxn = get_connection("QnA", sa_password)
     c = cnxn.cursor()
