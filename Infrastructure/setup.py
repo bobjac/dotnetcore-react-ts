@@ -9,7 +9,8 @@ def main(container_name, sa_password):
 
     if return_code == 0:
         # create the tables in the database
-        tables = qadb.create_sql_tables()
+        database = qadb.create_database(sa_password)
+        tables = qadb.create_sql_tables(sa_password)
     else:
         print("There was an error creating the container")
         
