@@ -20,7 +20,14 @@ namespace QandA.Data
 
         public AnswerGetResponse GetAnswer(int answerId)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                return connection.QueryFirstOrDefault<AnswerGetResponse> (
+                    @"EXEC dbo.Answer_Get_ByAnswerId @AnswerId = @AnswerId",
+                    new { AnswerId = answerId }
+                );
+            }
         }
 
         public QuestionGetSingleResponse GetQuestion(int questionId)
@@ -69,7 +76,14 @@ namespace QandA.Data
 
         public bool QuestionExist(int questionId)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                return connection.QueryFirst<bool> (
+                    @"EXEC dbo.Question_Exists @QuestionId = @QuestionId",
+                    new { QuestionId = questionId }
+                );
+            }
         }
 
         public IEnumerable<QuestionGetManyResponse> GetUnansweredQuestions()
