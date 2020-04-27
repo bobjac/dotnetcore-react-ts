@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
+using DbUp;
 
 namespace TodoApi
 {
@@ -27,8 +28,23 @@ namespace TodoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt =>
-                opt.UseInMemoryDatabase("TodoList"));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            EnsureDatabase.For.SqlDatabase(connectionString);
+
+            var upgrader = DeployChanges.To.SqlDatabase(connectionString, null)
+                .WithScriptsEmbeddedInAssembly(System.Reflection.Assembly
+                .GetExecutingAssembly())
+                .WithTransaction()
+                .Build();
+
+            if (upgrader.IsUpgradeRequired())
+            {
+                upgrader.PerformUpgrade();
+            }
+
+            //services.AddDbContext<TodoContext>(opt =>
+            //    opt.UseInMemoryDatabase("TodoList"));
             services.AddControllers();
         }
 
