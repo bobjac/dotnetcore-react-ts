@@ -28,7 +28,7 @@ namespace TodoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             EnsureDatabase.For.SqlDatabase(connectionString);
 
@@ -38,9 +38,20 @@ namespace TodoApi
                 .WithTransaction()
                 .Build();
 
+            string executedStripts = string.Empty;
+
             if (upgrader.IsUpgradeRequired())
             {
-                upgrader.PerformUpgrade();
+                var result = upgrader.PerformUpgrade();
+                foreach (var script in result.Scripts)
+                {
+                    if (!string.IsNullOrEmpty(executedStripts))
+                    {
+                        executedStripts += ", ";
+                    }
+
+                    executedStripts += script;
+                }
             }
 
             //services.AddDbContext<TodoContext>(opt =>
