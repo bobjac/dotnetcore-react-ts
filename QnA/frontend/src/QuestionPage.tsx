@@ -1,7 +1,7 @@
 import React, { FC, useState, Fragment, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Page } from './Page';
-import { QuestionData, getQuestion, postAnswer } from './QuestionsData';
+import { QuestionData, getQuestion, postAnswer, mapQuestionFromServer, QuestionDataFromServer } from './QuestionsData';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { gray3, gray6 } from './Styles';
@@ -21,7 +21,7 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
 
     const setUpSignalRConnection = async (questionId: number) => {
         const connection = new HubConnectionBuilder()
-            .withUrl('http://localhost:17525/questionshub')
+            .withUrl('http://localhost:5000/questionshub')
             .withAutomaticReconnect()
             .build();
         
@@ -29,9 +29,9 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
             console.log('Message', message);
         });
 
-        connection.on('ReceiveQuestion', (question: QuestionData) => {
+        connection.on('ReceiveQuestion', (question: QuestionDataFromServer) => {
             console.log('ReceiveQuestion', question);
-            setQuestion(question);
+            setQuestion(mapQuestionFromServer(question));
         });
 
         try {
