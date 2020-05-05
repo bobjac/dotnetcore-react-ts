@@ -4,7 +4,7 @@ echo 'Installing pyodbc Python package'
 pip3 install pyodbc
 
 CONTAINER="mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04"
-SA_PASSWORD="<PASSWORD>"
+SA_PASSWORD="AFw2hawabf23!"
 
 #docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<password>" \
 #   -p 1444:1433 --name sql2 \
