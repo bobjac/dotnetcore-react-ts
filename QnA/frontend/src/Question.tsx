@@ -6,6 +6,7 @@ import { QuestionData } from './QuestionsData';
 import { gray2, gray3 } from './Styles';
 import React from 'react';
 
+
 interface Props {
     data: QuestionData;
     showContent?: boolean;
