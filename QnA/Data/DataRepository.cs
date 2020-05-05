@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Dapper;
 using QandA.Data.Models;
+using static Dapper.SqlMapper;
 
 namespace QandA.Data
 {
@@ -34,12 +35,16 @@ namespace QandA.Data
                 );
             }
         }
-
+        /*
         public QuestionGetSingleResponse GetQuestion(int questionId)
         {
             using (var connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
+
+
+
+
                 var question = connection.QueryFirstOrDefault<QuestionGetSingleResponse> (
                     @"EXEC dbo.Question_GetSingle @QuestionId = @QuestionId",
                     new { QuestionId = questionId}
@@ -55,6 +60,31 @@ namespace QandA.Data
                 return question;
             }
         }
+        */
+        public QuestionGetSingleResponse GetQuestion(int questionId)
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                using (GridReader results =
+                  connection.QueryMultiple(
+                    @"EXEC dbo.Question_GetSingle @QuestionId = @QuestionId; 
+                      EXEC dbo.Answer_Get_ByQuestionId @QuestionId = @QuestionId",
+                    new { QuestionId = questionId }
+                  )
+                )
+                {
+                    var question =
+                      results.Read<QuestionGetSingleResponse>().FirstOrDefault();
+                    if (question != null)
+                    {
+                        question.Answers =
+                          results.Read<AnswerGetResponse>().ToList();
+                    }
+                    return question;
+                }
+            }
+        }
 
         public IEnumerable<QuestionGetManyResponse> GetQuestions()
         {
@@ -67,6 +97,37 @@ namespace QandA.Data
             }
         }
 
+        public IEnumerable<QuestionGetManyResponse> GetQuestionsWithAnswers()
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+
+                var questionDictionary = new Dictionary<int, QuestionGetManyResponse>();
+
+                return connection
+                        .Query<QuestionGetManyResponse, AnswerGetResponse, QuestionGetManyResponse>(
+                              "EXEC dbo.Question_GetMany_WithAnswers",
+                              map: (q, a) =>
+                              {
+                                  QuestionGetManyResponse question;
+                                  if (!questionDictionary.TryGetValue(q.QuestionId, out question))
+                                  {
+                                      question = q;
+                                      question.Answers =
+                                        new List<AnswerGetResponse>();
+                                      questionDictionary.Add(question.QuestionId, question);
+                                  }
+                                  question.Answers.Add(a);
+                                  return question;
+                              },
+                              splitOn: "QuestionId"
+                         )
+                         .Distinct()
+                         .ToList();
+            }
+        }
+
         public IEnumerable<QuestionGetManyResponse> GetQuestionsBySearch(string search)
         {
             using (var connection = new SqlConnection(this.connectionString))
@@ -75,6 +136,30 @@ namespace QandA.Data
                 return connection.Query<QuestionGetManyResponse>(
                     @"EXEC dbo.Question_GetMany_BySearch @Search = @Search",
                     new { Search = search }
+                );
+            }
+        }
+
+        public IEnumerable<QuestionGetManyResponse>GetQuestionsBySearchWithPaging(
+            string search,
+            int pageNumber,
+            int pageSize)
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                connection.Open();
+                var parameters = new
+                {
+                    Search = search,
+
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+                return connection.Query<QuestionGetManyResponse>(
+                  @"EXEC dbo.Question_GetMany_BySearch_WithPaging
+                    @Search = @Search,
+                    @PageNumber = @PageNumber,
+                    @PageSize = @PageSize", parameters
                 );
             }
         }
