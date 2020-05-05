@@ -11,11 +11,16 @@ namespace QandA.Data
 {
     public class DataRepository : IDataRepository
     {
-        private readonly string connectionString;
+        private string connectionString;
 
         public DataRepository(IConfiguration configuration)
         {
-            this.connectionString = configuration["ConnectionStrings:DetaultConnection"];
+            this.connectionString = configuration["ConnectionStrings:DefaultConnection"];
+
+            if (string.IsNullOrEmpty(this.connectionString))
+            {
+                this.connectionString = configuration.GetConnectionString("DefaultConnection");
+            }
         }
 
         public AnswerGetResponse GetAnswer(int answerId)
@@ -43,7 +48,7 @@ namespace QandA.Data
                 if (question != null)
                 {
                     question.Answers = connection.Query<AnswerGetResponse> (
-                        @"EXEC dbo.Answer_Get_BuQuestionId",
+                        @"EXEC dbo.Answer_Get_ByQuestionId @QuestionId = @QuestionId",
                         new { QuestionId = questionId }
                     );
                 }
