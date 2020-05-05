@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using QandA.Data;
 using QandA.Data.Models;
+using QandA.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace QandA.Controllers
 {
@@ -12,9 +14,12 @@ namespace QandA.Controllers
     {
         private readonly IDataRepository dataRepository;
 
-        public QuestionsController(IDataRepository dataRepository)
+        private readonly IHubContext<QuestionsHub> questionHubContext;
+
+        public QuestionsController(IDataRepository dataRepository, IHubContext<QuestionsHub> questionHubContext)
         {
             this.dataRepository = dataRepository;
+            this.questionHubContext = questionHubContext;
         }
 
         [HttpGet]
@@ -123,6 +128,12 @@ namespace QandA.Controllers
                 UserName = "bob.test@test.com",
                 Created = DateTime.UtcNow
             });
+
+            this.questionHubContext
+                .Clients
+                .Group($"Question-{answerPostRequest.QuestionId.Value}")
+                .SendAsync("ReceiveQuestion", this.dataRepository.GetQuestion(answerPostRequest.QuestionId.Value));
+
             return savedAnswer;
         }
     }

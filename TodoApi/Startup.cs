@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi.Models;
 using DbUp;
 using QandA.Data;
+using QandA.Hubs;
 
 namespace TodoApi
 {
@@ -60,6 +61,7 @@ namespace TodoApi
             services.AddControllers();
 
             services.AddScoped<IDataRepository, DataRepository>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +81,7 @@ namespace TodoApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<QuestionsHub>("/questionshub");
             });
         }
     }
