@@ -186,6 +186,18 @@ namespace QandA.Data
             }
         }
 
+        public async Task<IEnumerable<QuestionGetManyResponse>> GetUnansweredQuestionsAsync()
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                await connection.OpenAsync();
+
+                return await
+                  connection.QueryAsync<QuestionGetManyResponse>(
+                    "EXEC dbo.Question_GetUnanswered");
+            }
+        }
+
         public QuestionGetSingleResponse PostQuestion(QuestionPostFullRequest question)
         {
             using (var connection = new SqlConnection(this.connectionString))
@@ -239,6 +251,23 @@ namespace QandA.Data
                     @Content, 
                     @UserId = @UserId, @UserName = @UserName,
                     @Created = @Created", 
+                answer
+                );
+            }
+        }
+
+        public async Task<AnswerGetResponse> PostAnswerAsync(AnswerPostFullRequest answer)
+        {
+            using (var connection = new SqlConnection(this.connectionString))
+            {
+                await connection.OpenAsync();
+
+                return await connection.QueryFirstAsync<AnswerGetResponse>(
+                @"EXEC dbo.Answer_Post 
+                    @QuestionId = @QuestionId, @Content =
+                    @Content, 
+                    @UserId = @UserId, @UserName = @UserName,
+                    @Created = @Created",
                 answer
                 );
             }

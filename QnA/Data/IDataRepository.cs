@@ -14,6 +14,8 @@ namespace QandA.Data
 
         IEnumerable<QuestionGetManyResponse> GetUnansweredQuestions();
 
+        Task<IEnumerable<QuestionGetManyResponse>> GetUnansweredQuestionsAsync();
+
         IEnumerable<QuestionGetManyResponse> GetQuestionsBySearch(string search);
 
         IEnumerable<QuestionGetManyResponse> GetQuestionsBySearchWithPaging(string search, int pageNumber, int pageSize);
@@ -31,5 +33,7 @@ namespace QandA.Data
         void DeleteQuestion(int questionId);
 
         AnswerGetResponse PostAnswer(AnswerPostFullRequest answer);
+
+        Task<AnswerGetResponse> PostAnswerAsync(AnswerPostFullRequest answer);
     }
 }

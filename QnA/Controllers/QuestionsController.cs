@@ -5,6 +5,7 @@ using QandA.Data;
 using QandA.Data.Models;
 using QandA.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
 
 namespace QandA.Controllers
 {
@@ -43,9 +44,9 @@ namespace QandA.Controllers
         }
 
         [HttpGet("unanswered")]
-        public IEnumerable<QuestionGetManyResponse> GetUnansweredQuestions()
+        public async Task<IEnumerable<QuestionGetManyResponse>> GetUnansweredQuestions()
         {
-            return this.dataRepository.GetUnansweredQuestions();
+            return await this.dataRepository.GetUnansweredQuestionsAsync();
         }
 
         [HttpGet("{questionId}")]
@@ -118,7 +119,7 @@ namespace QandA.Controllers
         }
 
         [HttpPost("answer")]
-        public ActionResult<AnswerGetResponse> PostAnswer(AnswerPostRequest answerPostRequest)
+        public async Task<ActionResult<AnswerGetResponse>> PostAnswer(AnswerPostRequest answerPostRequest)
         {
             var questionExists = this.dataRepository.QuestionExists(answerPostRequest.QuestionId.Value);
 
@@ -127,7 +128,7 @@ namespace QandA.Controllers
                 return NotFound();
             }
 
-            var savedAnswer = this.dataRepository.PostAnswer(new AnswerPostFullRequest
+            var savedAnswer = await this.dataRepository.PostAnswerAsync(new AnswerPostFullRequest
             {
                 QuestionId = answerPostRequest.QuestionId.Value,
                 Content = answerPostRequest.Content,
@@ -136,7 +137,7 @@ namespace QandA.Controllers
                 Created = DateTime.UtcNow
             });
 
-            this.questionHubContext
+            await this.questionHubContext
                 .Clients
                 .Group($"Question-{answerPostRequest.QuestionId.Value}")
                 .SendAsync("ReceiveQuestion", this.dataRepository.GetQuestion(answerPostRequest.QuestionId.Value));
