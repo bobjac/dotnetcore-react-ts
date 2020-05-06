@@ -4,7 +4,7 @@ export const webAPIUrl = `${server}/api`;
 
 export const authSettings = {
   domain: 'bobjac.auth0.com',
-  client_id: '5eb2189e0df9cb08bef22602',
+  client_id: 'W9tVSOmiQX2qN1oR6RkTpd0jjN5YZHbL',
   redirect_uri: window.location.origin + '/signin-callback',
   scope: 'openid profile QandAAPI email',
   audience: 'https://qanda',
