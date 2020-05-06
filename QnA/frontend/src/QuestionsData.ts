@@ -1,3 +1,5 @@
+import { http } from './http';
+
 export interface QuestionData {
     questionId: number;
     title: string;
@@ -30,6 +32,7 @@ export interface AnswerDataFromServer {
     created: string;
 }
 
+/*
 export const mapQuestionFromServer = (
     question: QuestionDataFromServer,
 ): QuestionData => ({
@@ -39,7 +42,7 @@ export const mapQuestionFromServer = (
       ...answer,
       created: new Date(answer.created.substr(0, 19)),  
     })),
-});
+}); */
 
 const questions: QuestionData[] = [
     {
@@ -78,29 +81,91 @@ const wait = (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+export const mapQuestionFromServer = (
+    question: QuestionDataFromServer,
+  ): QuestionData => ({
+    ...question,
+    created: new Date(question.created),
+    answers: question.answers
+      ? question.answers.map(answer => ({
+          ...answer,
+          created: new Date(answer.created),
+        }))
+      : [],
+  });
+
 export const getUnansweredQuestions = async (): Promise<QuestionData[]> => {
-    await wait(500);
-    return questions.filter(q => q.answers.length === 0);
+    //await wait(500);
+    //return questions.filter(q => q.answers.length === 0);
+
+    /*
+    let unansweredQuestions: QuestionData[] = [];
+
+    await fetch('http://localhost:5000/api/questions/unanswered')
+        .then(res => res.json())
+        .then(body => {
+            unansweredQuestions = body;
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+    return unansweredQuestions.map(question => ({
+        ...question,
+        created: new Date(question.created),
+    })); */
+
+    try {
+        const result = await http<undefined, QuestionDataFromServer[]>( {
+            path: '/questions/unanswered',
+        });
+
+        if (result.parsedBody) {
+            return result.parsedBody.map(mapQuestionFromServer);
+        } else {
+            return [];
+        }
+    } catch (ex) {
+        console.error(ex);
+        return [];
+    }
 };
 
 export const getQuestion = async (
-    questionId: number
-): Promise<QuestionData | null> => {
-    await wait(500);
-    const results = questions.filter(q => questionId === questionId);
-    return results.length === 0 ? null : results[0];
-};
+    questionId: number,
+  ): Promise<QuestionData | null> => {
+    try {
+      const result = await http<undefined, QuestionDataFromServer>({
+        path: `/questions/${questionId}`,
+      });
+      if (result.ok && result.parsedBody) {
+        return mapQuestionFromServer(result.parsedBody);
+      } else {
+        return null;
+      }
+    } catch (ex) {
+      console.error(ex);
+      return null;
+    }
+  };
 
-export const searchQuestions = async (
-    criteria : string,
-): Promise<QuestionData[]> => {
-    await(500);
-    return questions.filter(
-        q => 
-            q.title.toLowerCase().indexOf(criteria.toLowerCase()) >= 0 
-            || q.content.toLowerCase().indexOf(criteria.toLowerCase()) >= 0, 
-    );
-};
+  export const searchQuestions = async (
+    criteria: string,
+  ): Promise<QuestionData[]> => {
+    try {
+      const result = await http<undefined, QuestionDataFromServer[]>({
+        path: `/questions?search=${criteria}`,
+      });
+      if (result.ok && result.parsedBody) {
+        return result.parsedBody.map(mapQuestionFromServer);
+      } else {
+        return [];
+      }
+    } catch (ex) {
+      console.error(ex);
+      return [];
+    }
+  };
 
 export interface PostQuestionData {
     title: string;
